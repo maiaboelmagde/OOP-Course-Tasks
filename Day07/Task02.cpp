@@ -3,11 +3,11 @@
 
 using namespace std;
 
-
 class shape{
     int color;
 public:
-    shape(){cout<<"Shape constructor"<<endl;}
+    shape(){ color = 9;}
+    shape(int c){color = c;}
     void setColor(int c){color = c;}
     int getColor(){return color;}
 };
@@ -18,12 +18,10 @@ public:
     Point(){
         x = 0;
         y = 0;
-        cout<<"Default Point Constructor.."<<endl;
     }
     Point(int x,int y){
         this->x = x;
         this->y = y;
-        cout<<"Overloaded Point Constructor.."<<endl;
     }
     Point(Point& p){x = p.x; y = p.y;}
 
@@ -42,8 +40,8 @@ class Circle : public shape{
     Point centre;
     int redius;
 public:
-    Circle():centre(){redius = 0; cout<<"Default Circle Constructor"<<endl;}
-    Circle(int x, int y, int redius):centre(x,y){this->redius = redius; cout<<"overloaded Circle Constructor"<<endl;}
+    Circle():centre(){redius = 0;}
+    Circle(int x, int y, int redius,int c):centre(x,y),shape(c){this->redius = redius;}
 
     setX(int x){ centre.setX(x) ;}
     sety(int y){centre.setY(y);}
@@ -61,6 +59,7 @@ public:
     }
 
     void Draw(){
+        setcolor(this->getColor());
         circle(centre.getX(),centre.getY(),redius);
     }
 };
@@ -69,8 +68,8 @@ class Rect : public shape{
     Point UL;
     Point LR;
 public:
-    Rect():UL(),LR(){ cout<<"Default Rect Constructor"<<endl;}
-    Rect(int x1, int y1, int x2, int y2):UL(x1,y1),LR(x2,y2){cout<<"Overloaded Rect Constructor"<<endl;}
+    Rect():UL(),LR(){}
+    Rect(int x1, int y1, int x2, int y2,int c):UL(x1,y1),LR(x2,y2),shape(c){}
     void setULX(int x){UL.setX(x);}
     void setULY(int y){UL.setY(y);}
     void setLRX(int x){LR.setX(x);}
@@ -82,16 +81,17 @@ public:
     void getLR(int& x,int& y){x=LR.getX(); y=LR.getY();}
 
     void Draw(){
+        setcolor(this->getColor());
         rectangle(UL.getX(), UL.getY(), LR.getX(), LR.getY());
     }
 };
 
-class Line : public shape{
+class Line: public shape{
     Point startPoint;
     Point endPoint;
 public:
-    Line():startPoint(),endPoint(){ cout<<"Default Line Constructor"<<endl;}
-    Line(int x1, int y1, int x2, int y2):startPoint(x1, y1),endPoint(x2, y2){ cout<<"Overloaded Line Constructor"<<endl;}
+    Line():startPoint(),endPoint(){}
+    Line(int x1, int y1, int x2, int y2,int c):startPoint(x1, y1),endPoint(x2, y2),shape(c){}
     void copyLine(Line l){
         startPoint.setX(l.startPoint.getX());
         startPoint.setY(l.startPoint.getY());
@@ -111,6 +111,7 @@ public:
     void getStart(int& x,int& y){x = startPoint.getX(); y = startPoint.getY();}
 
     void Draw(){
+        setcolor(this->getColor());
         line(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
     }
 };
@@ -128,7 +129,6 @@ public:
         ln = 0;
         cp = 0;
         rp = 0;
-        cout<<"Default Picture Constructor"<<endl;
     }
 
     Picture(Circle* c, int cn, Rect* rect, int rn, Line* l, int ln){
@@ -138,7 +138,6 @@ public:
         this->rn= rn;
         lp = l;
         this->ln = ln;
-        cout<<"Overloaded Picture Constructor"<<endl;
     }
 
     void display(){
@@ -152,38 +151,33 @@ public:
 int main()
 {
     initgraph();
-    setcolor(9);
-    Circle myCircle(200, 150, 50);
+    Circle myCircle(200, 150, 50,8);
+
+
+    Circle myCircle2(300, 150, 50,8);
+
+    Rect myRect(200, 270, 300, 250,8);
+
+    Line myLine1(170, 110, 230, 118,8);
+
+    Line myLine2(280, 118, 330, 110,8);
+
+
     myCircle.Draw();
-
-    Circle myCircle2(300, 150, 50);
     myCircle2.Draw();
-    setcolor(8);
-    Rect myRect(200, 270, 300, 250);
     myRect.Draw();
-
-    Line myLine1(170, 110, 230, 118);
     myLine1.Draw();
-    Line myLine2(280, 118, 330, 110);
     myLine2.Draw();
 
 
     Line lArr[2];
-    lArr[0].copyLine(*(new Line(370, 110, 430, 118)));
-    lArr[1].copyLine(*(new Line(480, 118, 530, 110)));
-    Circle cArr[2] = {(*(new Circle(400, 150, 50))),(*(new Circle(500, 150, 50)))};
+    lArr[0].copyLine(*(new Line(370, 110, 430, 118,9)));
+    lArr[1].copyLine(*(new Line(480, 118, 530, 110,9)));
+    Circle cArr[2] = {(*(new Circle(400, 150, 50,9))),(*(new Circle(500, 150, 50,9)))};
     //cArr[0].copyCircle(*(new Circle(400, 150, 50)));
     //cArr[1].copyCircle(*(new Circle(500, 150, 50)));
-    Rect r2(400, 270, 500, 250);
+    Rect r2(400, 270, 500, 250,9);
     Picture pic(cArr, 2, &r2, 1, lArr, 2);
     pic.display();
-
-     myCircle.Draw();
-     myCircle2.Draw();
-     myRect.Draw();
-     myLine1.Draw();
-     myLine2.Draw();
-
-
     return 0;
 }
